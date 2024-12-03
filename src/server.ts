@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import morgan from "morgan";
 import { connectDB } from "./config/db";
 import authRouter from "./routes/auth.route";
 dotenv.config();
@@ -7,13 +8,14 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+app.use(morgan("dev"));
 //default route for testing
-app.use("/", (req, res) => {
+app.use("/api", (req, res) => {
   res.send("Server is running");
 });
 
 //user routes
-app.use("/api/user", authRouter);
+app.use("/user", authRouter);
 
 app.listen(process.env.PORT, () => {
   connectDB();
