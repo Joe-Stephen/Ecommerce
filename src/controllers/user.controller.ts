@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
 const saltRounds = 10;
+import asyncHandler from "express-async-handler";
 import User from "../models/user.model";
 
 export const listUsers = async (req: any, res: any) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password");
     return res.status(200).json({ success: true, data: users });
   } catch (error) {
     console.error(error);
