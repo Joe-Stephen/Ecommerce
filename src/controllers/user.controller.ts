@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 const saltRounds = 10;
 import asyncHandler from "express-async-handler";
 import User from "../models/user.model";
+import { NextFunction, Request, Response } from "express";
 
 export const listUsers = async (req: any, res: any) => {
   try {
@@ -19,14 +20,12 @@ export const loginUser = async (req: any, res: any) => {
   } catch (error) {}
 };
 
-export const createUser = async (req: any, res: any) => {
+export const createUser = asyncHandler(async (req, res) => {
   try {
     //Duplicate email checking
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Email already exists" });
+      throw new Error("Email already exists");
     }
     // Generating salt
     const salt = await bcrypt.genSalt(saltRounds);
@@ -46,4 +45,4 @@ export const createUser = async (req: any, res: any) => {
       error: error.message,
     });
   }
-};
+});

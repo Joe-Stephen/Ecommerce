@@ -14,17 +14,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(notFound);
-app.use(errorHandler);
 
-//default route for testing
+//mounting test route
 app.use("/api", (req, res) => {
   res.send("Server is running");
 });
 
-//user routes
+//mounting routes
 app.use("/user", authRouter);
 
+//mounting error handlers
+app.use(notFound);
+app.use(errorHandler);
+
+//starting server and connecting to database
 app.listen(process.env.PORT, () => {
   connectDB();
   console.log(`Server is running at http://localhost:${process.env.PORT}!`);
